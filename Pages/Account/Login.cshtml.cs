@@ -1,14 +1,24 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using movieRecommender.Data;
 using movieRecommender.Identity;
+using movieRecommender.Seeding;
 
 namespace movieRecommender.Pages.Account;
 
-/// <summary>Login — US-002 and US-004, FR-006 through FR-010 and FR-014, FR-015.</summary>
+/// <summary>
+/// Login — 001-002 US-002 and US-004, FR-006 through FR-010 and FR-014, FR-015. Also
+/// 003-004 US-005: one-click demo sign-in, in Development only (FR-018, FR-019).
+/// </summary>
+/// <remarks>
+/// The explicit opt-out FR-005's deny-by-default expects. You cannot be required to be
+/// signed in to sign in.
+/// </remarks>
+[AllowAnonymous]
 [IgnoreAntiforgeryToken] // validated by hand instead; see AntiforgeryPageExtensions.
 public class LoginModel : PageModel
 {
@@ -27,20 +37,29 @@ public class LoginModel : PageModel
     private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
     private readonly DecoyPasswordHash _decoyHash;
     private readonly IAntiforgery _antiforgery;
+    private readonly DemoSignIn _demoSignIn;
 
     public LoginModel(
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager,
         IPasswordHasher<ApplicationUser> passwordHasher,
         DecoyPasswordHash decoyHash,
-        IAntiforgery antiforgery)
+        IAntiforgery antiforgery,
+        DemoSignIn demoSignIn)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _passwordHasher = passwordHasher;
         _decoyHash = decoyHash;
         _antiforgery = antiforgery;
+        _demoSignIn = demoSignIn;
     }
+
+    /// <summary>
+    /// FR-019 / NFR-003: asked server-side on every render, and asked again in the handler.
+    /// Outside Development there is nothing here to hide, because there is nothing here.
+    /// </summary>
+    public DemoSignIn DemoSignIn => _demoSignIn;
 
     [BindProperty]
     public InputModel Input { get; set; } = new();
@@ -128,6 +147,63 @@ public class LoginModel : PageModel
 
         // FR-009 / FR-010 are already settled: isPersistent above decides between a
         // session cookie and the 14-day sliding one configured in Program.cs.
+        return RedirectToLocal();
+    }
+
+    /// <summary>
+    /// One-click demo sign-in — 003-004 FR-018, SC-016. Signs a user in without verifying
+    /// a password, so that a mistyped password in front of an audience cannot derail the
+    /// opening (US-005).
+    /// </summary>
+    /// <remarks>
+    /// Every gate here is server-side (NFR-003). In a non-Development environment the
+    /// availability check fails first and a forged request gets a plain not-found (EC-17)
+    /// — the same answer as an email that is not one of the fixture's.
+    /// </remarks>
+    public async Task<IActionResult> OnPostDemoAsync(string? email)
+    {
+        if (!_demoSignIn.IsAvailable)
+        {
+            return NotFound();
+        }
+
+        if (_signInManager.IsSignedIn(User))
+        {
+            return RedirectToPage("/Index");
+        }
+
+        if (!await this.HasValidAntiforgeryTokenAsync(_antiforgery))
+        {
+            ModelState.Clear();
+            ModelState.AddModelError(string.Empty, StaleFormMessage);
+            return Page();
+        }
+
+        // The submitted email selects from the fixture and nothing else — it never
+        // reaches the store as a free-form lookup.
+        var option = _demoSignIn.Find(email);
+        if (option is null)
+        {
+            return NotFound();
+        }
+
+        var user = await _userManager.FindByEmailAsync(option.Email);
+        if (user is null)
+        {
+            // Seeding is skipped when the app runs outside Development, and an account can
+            // be deleted between runs. Nothing to sign in as.
+            return NotFound();
+        }
+
+        // EC-15: the demo account locks like any other after five mistyped passwords
+        // (FR-020) — and this path verifies no password, so it still works and clears the
+        // count on the way through.
+        await _userManager.ResetAccessFailedCountAsync(user);
+        await _userManager.SetLockoutEndDateAsync(user, null);
+
+        // §5.2: the same cookie a password login issues, and indistinguishable from one
+        // afterwards. Session-scoped, as sign-up is — "Remember me" is a typed-login choice.
+        await _signInManager.SignInAsync(user, isPersistent: false);
         return RedirectToLocal();
     }
 

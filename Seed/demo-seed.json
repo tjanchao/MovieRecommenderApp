@@ -1,0 +1,177 @@
+{
+  "attribution": "Film titles, release years, runtimes and genre names are derived from The Movie Database (TMDB). This product uses the TMDB API but is not endorsed or certified by TMDB. Poster paths are deliberately absent: they are TMDB's to serve, and seeding must work with no network (FR-013).",
+
+  "_comment": [
+    "Spec docs/specs/003-004-private-data-and-demo-accounts.md §3.2.",
+    "Two invariants pull against each other here and DemoSeedFixtureLoader checks both:",
+    "  FR-015 — the accounts must visibly differ: their preferred genres and eras are disjoint,",
+    "           and no two of them rate the same film positively outside the designed overlap.",
+    "  FR-016 — they must still agree somewhere: the four films below are rated positively by",
+    "           everyone, so story 029's 'first film everyone said yes to' has an answer.",
+    "Edit the taste freely; delete the overlap and startup fails on purpose (EC-18).",
+    "Every daysAgo is relative to the moment of seeding, never a calendar date (FR-022)."
+  ],
+
+  "films": [
+    { "tmdbId": 550, "title": "Fight Club", "releaseYear": 1999, "runtimeMin": 139, "genres": ["Drama", "Thriller"], "synopsis": "An insomniac office worker and a soap maker start an underground fight club." },
+    { "tmdbId": 680, "title": "Pulp Fiction", "releaseYear": 1994, "runtimeMin": 154, "genres": ["Thriller", "Crime"], "synopsis": "Interlocking stories of hitmen, a boxer and a pair of diner robbers in Los Angeles." },
+    { "tmdbId": 807, "title": "Se7en", "releaseYear": 1995, "runtimeMin": 127, "genres": ["Crime", "Mystery", "Thriller"], "synopsis": "Two detectives hunt a killer who uses the seven deadly sins as his motifs." },
+    { "tmdbId": 274, "title": "The Silence of the Lambs", "releaseYear": 1991, "runtimeMin": 118, "genres": ["Crime", "Drama", "Thriller"], "synopsis": "A trainee agent seeks the help of an imprisoned cannibal to catch another killer." },
+    { "tmdbId": 629, "title": "The Usual Suspects", "releaseYear": 1995, "runtimeMin": 106, "genres": ["Drama", "Crime", "Thriller"], "synopsis": "A con artist recounts the events that led to a massacre on a ship." },
+    { "tmdbId": 77, "title": "Memento", "releaseYear": 2000, "runtimeMin": 113, "genres": ["Mystery", "Thriller"], "synopsis": "A man without short-term memory hunts his wife's killer, backwards." },
+    { "tmdbId": 1422, "title": "The Departed", "releaseYear": 2006, "runtimeMin": 151, "genres": ["Drama", "Thriller", "Crime"], "synopsis": "An undercover cop and a mole in the police try to identify each other." },
+    { "tmdbId": 1949, "title": "Zodiac", "releaseYear": 2007, "runtimeMin": 157, "genres": ["Crime", "Drama", "Mystery", "Thriller"], "synopsis": "A cartoonist becomes obsessed with an uncaught San Francisco serial killer." },
+    { "tmdbId": 1124, "title": "The Prestige", "releaseYear": 2006, "runtimeMin": 130, "genres": ["Drama", "Mystery", "Science Fiction"], "synopsis": "Two rival magicians destroy each other in pursuit of the perfect trick." },
+    { "tmdbId": 500, "title": "Reservoir Dogs", "releaseYear": 1992, "runtimeMin": 99, "genres": ["Crime", "Thriller"], "synopsis": "The aftermath of a jewellery heist that went wrong, told in a warehouse." },
+    { "tmdbId": 641, "title": "Requiem for a Dream", "releaseYear": 2000, "runtimeMin": 102, "genres": ["Drama", "Crime"], "synopsis": "Four people in Coney Island are pulled apart by their addictions." },
+    { "tmdbId": 1359, "title": "American Psycho", "releaseYear": 2000, "runtimeMin": 102, "genres": ["Thriller", "Drama", "Crime"], "synopsis": "A Manhattan investment banker leads a second life nobody quite notices." },
+    { "tmdbId": 745, "title": "The Sixth Sense", "releaseYear": 1999, "runtimeMin": 107, "genres": ["Mystery", "Thriller", "Drama"], "synopsis": "A child psychologist treats a boy who says he sees dead people." },
+    { "tmdbId": 1018, "title": "Mulholland Drive", "releaseYear": 2001, "runtimeMin": 147, "genres": ["Thriller", "Drama", "Mystery"], "synopsis": "An amnesiac and an aspiring actress search Los Angeles for an identity." },
+    { "tmdbId": 603, "title": "The Matrix", "releaseYear": 1999, "runtimeMin": 136, "genres": ["Action", "Science Fiction"], "synopsis": "A hacker learns that his world is a simulation and joins the resistance." },
+    { "tmdbId": 155, "title": "The Dark Knight", "releaseYear": 2008, "runtimeMin": 152, "genres": ["Drama", "Action", "Crime", "Thriller"], "synopsis": "Batman faces an anarchist who wants to prove that anyone can be broken." },
+    { "tmdbId": 6977, "title": "No Country for Old Men", "releaseYear": 2007, "runtimeMin": 122, "genres": ["Crime", "Drama", "Thriller"], "synopsis": "A welder takes a case of drug money and is pursued across west Texas." },
+    { "tmdbId": 11324, "title": "Shutter Island", "releaseYear": 2010, "runtimeMin": 138, "genres": ["Drama", "Thriller", "Mystery"], "synopsis": "A marshal investigates a disappearance at a hospital for the criminally insane." },
+    { "tmdbId": 2502, "title": "The Bourne Identity", "releaseYear": 2002, "runtimeMin": 119, "genres": ["Action", "Thriller", "Mystery"], "synopsis": "A man pulled from the sea with no memory turns out to be very hard to kill." },
+    { "tmdbId": 16869, "title": "Inglourious Basterds", "releaseYear": 2009, "runtimeMin": 153, "genres": ["Drama", "Thriller", "War"], "synopsis": "Two plots to end the war converge on a Paris cinema." },
+
+    { "tmdbId": 150540, "title": "Inside Out", "releaseYear": 2015, "runtimeMin": 95, "genres": ["Animation", "Family", "Adventure", "Drama", "Comedy"], "synopsis": "Five emotions run the mind of a girl whose family has just moved city." },
+    { "tmdbId": 109445, "title": "Frozen", "releaseYear": 2013, "runtimeMin": 102, "genres": ["Animation", "Family", "Adventure"], "synopsis": "A princess sets out to find her sister, whose powers have frozen the kingdom." },
+    { "tmdbId": 10193, "title": "Toy Story 3", "releaseYear": 2010, "runtimeMin": 103, "genres": ["Animation", "Family", "Comedy"], "synopsis": "The toys are donated to a day-care centre as Andy leaves for college." },
+    { "tmdbId": 301528, "title": "Toy Story 4", "releaseYear": 2019, "runtimeMin": 100, "genres": ["Animation", "Family", "Comedy", "Adventure"], "synopsis": "Woody sets out to rescue a homemade toy on a road trip." },
+    { "tmdbId": 260513, "title": "Incredibles 2", "releaseYear": 2018, "runtimeMin": 118, "genres": ["Action", "Adventure", "Animation", "Family"], "synopsis": "Helen goes back to work while Bob stays home with the children." },
+    { "tmdbId": 508442, "title": "Soul", "releaseYear": 2020, "runtimeMin": 100, "genres": ["Animation", "Family", "Comedy", "Fantasy", "Drama"], "synopsis": "A jazz pianist loses his body on the day of his big break." },
+    { "tmdbId": 508947, "title": "Turning Red", "releaseYear": 2022, "runtimeMin": 100, "genres": ["Animation", "Family", "Comedy", "Fantasy"], "synopsis": "A thirteen-year-old turns into a giant red panda whenever she gets excited." },
+    { "tmdbId": 324857, "title": "Spider-Man: Into the Spider-Verse", "releaseYear": 2018, "runtimeMin": 117, "genres": ["Animation", "Action", "Adventure", "Science Fiction"], "synopsis": "Miles Morales meets the Spider-People of other dimensions." },
+    { "tmdbId": 569094, "title": "Spider-Man: Across the Spider-Verse", "releaseYear": 2023, "runtimeMin": 140, "genres": ["Animation", "Action", "Adventure", "Science Fiction"], "synopsis": "Miles takes on a whole society of Spider-People over one decision." },
+    { "tmdbId": 508965, "title": "Klaus", "releaseYear": 2019, "runtimeMin": 96, "genres": ["Animation", "Family", "Comedy", "Adventure"], "synopsis": "A postman posted to a feuding island befriends a reclusive toymaker." },
+    { "tmdbId": 315162, "title": "Puss in Boots: The Last Wish", "releaseYear": 2022, "runtimeMin": 102, "genres": ["Animation", "Family", "Fantasy", "Adventure", "Comedy"], "synopsis": "Down to his last life, Puss goes looking for a wishing star." },
+    { "tmdbId": 177572, "title": "Big Hero 6", "releaseYear": 2014, "runtimeMin": 102, "genres": ["Adventure", "Family", "Animation", "Action", "Comedy"], "synopsis": "A boy and an inflatable healthcare robot form a team of heroes." },
+    { "tmdbId": 269149, "title": "Zootopia", "releaseYear": 2016, "runtimeMin": 108, "genres": ["Animation", "Adventure", "Family", "Comedy"], "synopsis": "A rabbit police officer and a con-artist fox work a missing-mammal case." },
+    { "tmdbId": 277834, "title": "Moana", "releaseYear": 2016, "runtimeMin": 107, "genres": ["Animation", "Adventure", "Family", "Comedy"], "synopsis": "A chief's daughter sails beyond the reef to find a demigod." },
+    { "tmdbId": 354912, "title": "Coco", "releaseYear": 2017, "runtimeMin": 105, "genres": ["Family", "Animation", "Fantasy", "Music", "Comedy"], "synopsis": "A boy who wants to play music crosses into the Land of the Dead." },
+    { "tmdbId": 372058, "title": "Your Name.", "releaseYear": 2016, "runtimeMin": 106, "genres": ["Romance", "Animation", "Drama"], "synopsis": "Two teenagers discover they are swapping bodies across a distance they cannot place." },
+
+    { "tmdbId": 496243, "title": "Parasite", "releaseYear": 2019, "runtimeMin": 132, "genres": ["Comedy", "Thriller", "Drama"], "synopsis": "A struggling family insinuates itself into a wealthy household." },
+    { "tmdbId": 120467, "title": "The Grand Budapest Hotel", "releaseYear": 2014, "runtimeMin": 99, "genres": ["Comedy", "Drama"], "synopsis": "A concierge and a lobby boy are caught up in a stolen painting and an inheritance." },
+    { "tmdbId": 546554, "title": "Knives Out", "releaseYear": 2019, "runtimeMin": 130, "genres": ["Comedy", "Crime", "Mystery"], "synopsis": "A detective investigates the death of a crime novelist among his own family." },
+    { "tmdbId": 129, "title": "Spirited Away", "releaseYear": 2001, "runtimeMin": 125, "genres": ["Animation", "Family", "Fantasy"], "synopsis": "A girl must work in a spirit bathhouse to free her parents." }
+  ],
+
+  "accounts": [
+    {
+      "email": "ava@example.com",
+      "displayName": "Ava",
+      "password": "demo demo demo",
+      "tasteLabel": "Slow-burn thrillers and neo-noir, 1990s–2000s",
+      "preferredGenres": ["Thriller", "Crime", "Mystery"],
+      "preferredEras": ["1990s", "2000s"],
+      "ratings": [
+        { "tmdbId": 550, "sentiment": "Loved", "daysAgo": 212 },
+        { "tmdbId": 680, "sentiment": "Loved", "daysAgo": 198 },
+        { "tmdbId": 807, "sentiment": "Loved", "daysAgo": 181 },
+        { "tmdbId": 274, "sentiment": "Loved", "daysAgo": 174 },
+        { "tmdbId": 629, "sentiment": "Liked", "daysAgo": 160 },
+        { "tmdbId": 77, "sentiment": "Loved", "daysAgo": 151 },
+        { "tmdbId": 1422, "sentiment": "Loved", "daysAgo": 140 },
+        { "tmdbId": 1949, "sentiment": "Loved", "daysAgo": 129 },
+        { "tmdbId": 1124, "sentiment": "Liked", "daysAgo": 118 },
+        { "tmdbId": 500, "sentiment": "Liked", "daysAgo": 110 },
+        { "tmdbId": 641, "sentiment": "Liked", "daysAgo": 97 },
+        { "tmdbId": 1359, "sentiment": "Liked", "daysAgo": 88 },
+        { "tmdbId": 745, "sentiment": "Liked", "daysAgo": 76 },
+        { "tmdbId": 1018, "sentiment": "Loved", "daysAgo": 68 },
+        { "tmdbId": 603, "sentiment": "Liked", "daysAgo": 59 },
+        { "tmdbId": 155, "sentiment": "Liked", "daysAgo": 51 },
+        { "tmdbId": 6977, "sentiment": "Loved", "daysAgo": 43 },
+        { "tmdbId": 11324, "sentiment": "Liked", "daysAgo": 36 },
+        { "tmdbId": 2502, "sentiment": "Liked", "daysAgo": 29 },
+        { "tmdbId": 16869, "sentiment": "Liked", "daysAgo": 22 },
+
+        { "tmdbId": 496243, "sentiment": "Loved", "daysAgo": 17 },
+        { "tmdbId": 546554, "sentiment": "Liked", "daysAgo": 12 },
+        { "tmdbId": 120467, "sentiment": "Liked", "daysAgo": 8 },
+        { "tmdbId": 129, "sentiment": "Liked", "daysAgo": 5 },
+
+        { "tmdbId": 109445, "sentiment": "Meh", "daysAgo": 64 },
+        { "tmdbId": 354912, "sentiment": "Meh", "daysAgo": 31 }
+      ],
+      "history": [
+        { "tmdbId": 129, "daysAgo": 3 },
+        { "tmdbId": 120467, "daysAgo": 9 },
+        { "tmdbId": 546554, "daysAgo": 13 },
+        { "tmdbId": 496243, "daysAgo": 18 },
+        { "tmdbId": 16869, "daysAgo": 23 },
+        { "tmdbId": 2502, "daysAgo": 30 },
+        { "tmdbId": 354912, "daysAgo": 32 },
+        { "tmdbId": 11324, "daysAgo": 37 },
+        { "tmdbId": 6977, "daysAgo": 44 },
+        { "tmdbId": 155, "daysAgo": 52 },
+        { "tmdbId": 603, "daysAgo": 60 },
+        { "tmdbId": 1018, "daysAgo": 69 }
+      ],
+      "watchlist": [
+        { "tmdbId": 1949, "daysAgo": 26 },
+        { "tmdbId": 372058, "daysAgo": 19 },
+        { "tmdbId": 508442, "daysAgo": 11 },
+        { "tmdbId": 641, "daysAgo": 6 },
+        { "tmdbId": 1359, "daysAgo": 2 }
+      ]
+    },
+    {
+      "email": "milo@example.com",
+      "displayName": "Milo",
+      "password": "demo demo demo",
+      "tasteLabel": "Animation, comedy and feel-good, 2010s–2020s",
+      "preferredGenres": ["Animation", "Comedy", "Family"],
+      "preferredEras": ["2010s", "2020s"],
+      "ratings": [
+        { "tmdbId": 150540, "sentiment": "Loved", "daysAgo": 205 },
+        { "tmdbId": 109445, "sentiment": "Liked", "daysAgo": 190 },
+        { "tmdbId": 10193, "sentiment": "Loved", "daysAgo": 176 },
+        { "tmdbId": 301528, "sentiment": "Liked", "daysAgo": 163 },
+        { "tmdbId": 260513, "sentiment": "Liked", "daysAgo": 149 },
+        { "tmdbId": 508442, "sentiment": "Loved", "daysAgo": 137 },
+        { "tmdbId": 508947, "sentiment": "Liked", "daysAgo": 124 },
+        { "tmdbId": 324857, "sentiment": "Loved", "daysAgo": 112 },
+        { "tmdbId": 569094, "sentiment": "Loved", "daysAgo": 101 },
+        { "tmdbId": 508965, "sentiment": "Liked", "daysAgo": 92 },
+        { "tmdbId": 315162, "sentiment": "Liked", "daysAgo": 80 },
+        { "tmdbId": 177572, "sentiment": "Liked", "daysAgo": 71 },
+        { "tmdbId": 269149, "sentiment": "Loved", "daysAgo": 62 },
+        { "tmdbId": 277834, "sentiment": "Liked", "daysAgo": 54 },
+        { "tmdbId": 354912, "sentiment": "Loved", "daysAgo": 45 },
+        { "tmdbId": 372058, "sentiment": "Liked", "daysAgo": 33 },
+
+        { "tmdbId": 120467, "sentiment": "Loved", "daysAgo": 25 },
+        { "tmdbId": 546554, "sentiment": "Loved", "daysAgo": 20 },
+        { "tmdbId": 496243, "sentiment": "Liked", "daysAgo": 14 },
+        { "tmdbId": 129, "sentiment": "Loved", "daysAgo": 7 },
+
+        { "tmdbId": 550, "sentiment": "Meh", "daysAgo": 118 },
+        { "tmdbId": 807, "sentiment": "Meh", "daysAgo": 86 },
+        { "tmdbId": 603, "sentiment": "Meh", "daysAgo": 40 }
+      ],
+      "history": [
+        { "tmdbId": 129, "daysAgo": 4 },
+        { "tmdbId": 496243, "daysAgo": 15 },
+        { "tmdbId": 546554, "daysAgo": 21 },
+        { "tmdbId": 120467, "daysAgo": 26 },
+        { "tmdbId": 372058, "daysAgo": 34 },
+        { "tmdbId": 603, "daysAgo": 41 },
+        { "tmdbId": 354912, "daysAgo": 46 },
+        { "tmdbId": 277834, "daysAgo": 55 },
+        { "tmdbId": 269149, "daysAgo": 63 },
+        { "tmdbId": 177572, "daysAgo": 72 },
+        { "tmdbId": 315162, "daysAgo": 81 },
+        { "tmdbId": 508965, "daysAgo": 93 }
+      ],
+      "watchlist": [
+        { "tmdbId": 569094, "daysAgo": 24 },
+        { "tmdbId": 508947, "daysAgo": 16 },
+        { "tmdbId": 11324, "daysAgo": 10 },
+        { "tmdbId": 150540, "daysAgo": 5 },
+        { "tmdbId": 10193, "daysAgo": 1 }
+      ]
+    }
+  ]
+}

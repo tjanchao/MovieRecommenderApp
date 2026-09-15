@@ -15,4 +15,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Spec 003-004 FR-013: the demo's seed data is checked in and read from the content
+         root, so a fresh clone with no API key and no network still produces working
+         accounts. Copied to the output so it is found when the app is run from bin/. -->
+    <Content Update="Seed\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
