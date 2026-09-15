@@ -1,0 +1,35 @@
+@page
+@model movieRecommender.Pages.Demo.ResetModel
+@{
+    ViewData["Title"] = "Reset the demo";
+}
+
+<h1 class="h3">Reset the demo</h1>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-success" role="alert">@Model.StatusMessage</div>
+}
+
+<p>
+    Restores every demo account's ratings, watch history, watchlist and dismissals to the
+    state the checked-in fixture describes. Activity accumulated since the last seeding is
+    discarded.
+</p>
+
+<ul>
+    @foreach (var account in Model.Accounts)
+    {
+        <li>@account.DisplayName <span class="text-muted">— @account.Email</span></li>
+    }
+</ul>
+
+<p class="text-muted">
+    Accounts themselves are left alone, so anyone currently signed in as a demo account
+    stays signed in and sees seeded data on their next page load.
+</p>
+
+<form method="post">
+    <button type="submit" class="btn btn-warning">Reset to seeded state</button>
+    <a class="btn btn-link" asp-page="/Index">Cancel</a>
+</form>

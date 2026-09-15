@@ -1,10 +1,21 @@
-@* FR-012: who you are, or how to become someone. *@
+@* 001-002 FR-012: who you are, or how to become someone. *@
 @using Microsoft.AspNetCore.Identity
 @using movieRecommender.Data
 @using movieRecommender.Identity
+@using movieRecommender.Seeding
 @inject SignInManager<ApplicationUser> SignInManager
+@inject DemoSignIn DemoSignIn
 
 <ul class="navbar-nav">
+    @* 003-004 FR-021. Server-side gated exactly as the login page's demo controls are —
+       outside Development this is absent and the page behind it is a not-found. *@
+    @if (DemoSignIn.IsAvailable)
+    {
+        <li class="nav-item">
+            <a class="nav-link text-muted" asp-page="/Demo/Reset">Reset demo</a>
+        </li>
+    }
+
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">

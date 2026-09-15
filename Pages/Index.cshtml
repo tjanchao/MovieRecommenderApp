@@ -1,10 +1,76 @@
-﻿@page
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (Model.Taste is null && !User.Identity!.IsAuthenticated)
+{
+    <div class="text-center">
+        <h1 class="display-4">movieRecommender</h1>
+        <p class="lead">Films picked for you, from what you have actually watched.</p>
+        <p>
+            <a class="btn btn-primary" asp-page="/Account/Register">Sign up</a>
+            <a class="btn btn-outline-secondary" asp-page="/Account/Login">Log in</a>
+        </p>
+    </div>
+}
+else
+{
+    <h1 class="h3">Hello, @User.DisplayName()</h1>
+
+    @* Every figure on this page came out of a query that never mentioned an owner. That
+       is 003-004 FR-002 and FR-007: the scoping is in the store, not in the page. *@
+    @if (Model.Taste is not null)
+    {
+        <p class="lead">@Model.Taste.TasteLabel</p>
+        <p class="text-muted">
+            You told us you like @string.Join(", ", Model.Taste.PreferredGenres)@(Model.Taste.PreferredEras.Count > 0 ? $" from the {string.Join(" and ", Model.Taste.PreferredEras)}" : "").
+        </p>
+    }
+
+    <div class="row row-cols-1 row-cols-sm-3 g-3 mb-4">
+        <div class="col">
+            <div class="border rounded p-3">
+                <div class="display-6">@Model.RatingCount</div>
+                <div class="text-muted">films rated</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="border rounded p-3">
+                <div class="display-6">@Model.WatchedCount</div>
+                <div class="text-muted">films watched</div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="border rounded p-3">
+                <div class="display-6">@Model.WatchlistCount</div>
+                <div class="text-muted">on your watchlist</div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.TopGenres.Count > 0)
+    {
+        <p>
+            <span class="text-muted">What your ratings say:</span>
+            @foreach (var genre in Model.TopGenres)
+            {
+                <span class="badge text-bg-light">@genre</span>
+            }
+        </p>
+    }
+
+    @if (Model.RecentlyWatched.Count > 0)
+    {
+        <h2 class="h5 mt-4">Recently watched</h2>
+        <ul class="list-unstyled">
+            @foreach (var film in Model.RecentlyWatched)
+            {
+                <li>@film.Title <span class="text-muted">(@film.ReleaseYear)</span></li>
+            }
+        </ul>
+    }
+
+    <p class="mt-4"><a asp-page="/Ratings/Index">All your ratings</a></p>
+}

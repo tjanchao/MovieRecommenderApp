@@ -1,0 +1,39 @@
+@page
+@model movieRecommender.Pages.Ratings.IndexModel
+@{
+    ViewData["Title"] = "Your ratings";
+}
+
+<h1 class="h3">Your ratings</h1>
+<p class="text-muted">@Model.Ratings.Count rating(s). Only yours — see the spec, FR-002.</p>
+
+@if (Model.Ratings.Count == 0)
+{
+    <p>Nothing rated yet.</p>
+}
+else
+{
+    <table class="table table-sm align-middle">
+        <thead>
+            <tr>
+                <th scope="col">Film</th>
+                <th scope="col">Year</th>
+                <th scope="col">You thought</th>
+                <th scope="col">Rated</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rating in Model.Ratings)
+            {
+                <tr>
+                    <td>@rating.Film.Title</td>
+                    <td>@rating.Film.ReleaseYear</td>
+                    <td>@rating.Sentiment</td>
+                    <td>@rating.RatedAt.ToLocalTime().ToString("d MMM yyyy")</td>
+                    <td><a asp-page="/Ratings/Details" asp-route-id="@rating.Id">Details</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

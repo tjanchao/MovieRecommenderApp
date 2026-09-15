@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,6 +11,11 @@ using movieRecommender.Identity;
 namespace movieRecommender.Pages.Account;
 
 /// <summary>Sign-up — US-001, FR-001 through FR-005.</summary>
+/// <remarks>
+/// 003-004 FR-005: an explicit opt-out from deny-by-default. Requiring an account in order
+/// to create one would be a closed loop.
+/// </remarks>
+[AllowAnonymous]
 [IgnoreAntiforgeryToken] // validated by hand instead; see AntiforgeryPageExtensions.
 public class RegisterModel : PageModel
 {

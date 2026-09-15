@@ -1,16 +1,34 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using movieRecommender.Data;
 using movieRecommender.Identity;
+using movieRecommender.Security;
+using movieRecommender.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+// 003-004 FR-005. Deny-by-default: a page is protected because nobody opened it up, not
+// because somebody remembered to close it. The failure mode of the opposite choice is a
+// *missing* attribute, and nothing in a code review or a test run draws attention to an
+// attribute that isn't there (§3.1). The cost is that /Index, /Privacy, /Error and the
+// three account pages each carry an explicit [AllowAnonymous].
+builder.Services.AddAuthorization(options =>
+    options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+
+// 003-004 FR-006: the acting user comes from the authentication cookie and from nowhere
+// else. Scoped, because "who is acting" is a property of the request.
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+
 // Persistence (ADR-0001). File-backed SQLite: accounts have to survive an application
 // restart mid-demo (EC-15, SUC-003), and the same store serves the film cache in 005-008.
+// Since 003-004 this is also where ownership is enforced (ADR-0003) — the context takes
+// ICurrentUser and scopes every personal read to it.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -97,6 +115,18 @@ builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(keyRingPath))
     .SetApplicationName("movieRecommender");
 
+// 003-004 FR-011 / FR-019. The fixture is loaded — and validated — only in Development;
+// everywhere else it is empty, which is what switches seeding and one-click sign-in off.
+// Both services are registered unconditionally so that the pages depending on them resolve
+// in every environment and answer with a not-found rather than a resolution failure (EC-17).
+builder.Services.AddSingleton<DemoSeedFixtureLoader>();
+builder.Services.AddSingleton(serviceProvider =>
+    serviceProvider.GetRequiredService<IHostEnvironment>().IsDevelopment()
+        ? serviceProvider.GetRequiredService<DemoSeedFixtureLoader>().Load()
+        : new DemoSeedFixture());
+builder.Services.AddSingleton<DemoSignIn>();
+builder.Services.AddScoped<DemoDataSeeder>();
+
 var app = builder.Build();
 
 // Single process on a single machine (NFR-006): migrating on start keeps the demo to
@@ -104,6 +134,25 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+
+    // 003-004 FR-011. Development only (FR-019), idempotent (FR-012), and it calls nothing
+    // external (FR-013) — a fresh clone with no keys and no network still gets two accounts
+    // with ratings and history.
+    if (app.Environment.IsDevelopment())
+    {
+        try
+        {
+            await scope.ServiceProvider.GetRequiredService<DemoDataSeeder>().SeedAsync();
+        }
+        catch (Exception exception)
+        {
+            // NFR-004: abort startup naming what failed, rather than starting an unseeded
+            // app. Discovering an empty demo at `dotnet run` is recoverable; discovering it
+            // on stage is not.
+            throw new InvalidOperationException(
+                $"Demo seeding failed, so the application did not start: {exception.Message}", exception);
+        }
+    }
 }
 
 // Configure the HTTP request pipeline.
@@ -122,7 +171,13 @@ app.UseAuthentication();
 app.UseStaleAuthCookieCleanup();
 app.UseAuthorization();
 
-app.MapStaticAssets();
+// 003-004 FR-009 / SC-009. After UseRouting, so the endpoint — and therefore whether the
+// response may contain personal data — is known.
+app.UsePersonalDataCacheControl();
+
+// Stylesheets and scripts are not personal data. Without this the fallback policy above
+// would demand a login for the site's own CSS.
+app.MapStaticAssets().AllowAnonymous();
 app.MapRazorPages()
    .WithStaticAssets();
 

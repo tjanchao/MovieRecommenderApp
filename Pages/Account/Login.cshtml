@@ -38,6 +38,38 @@
         <p class="mt-3">
             No account yet? <a asp-page="/Account/Register">Sign up</a>.
         </p>
+
+        @* 003-004 FR-018/FR-019. Not hidden, not disabled — simply not rendered, and the
+           handler behind it answers not-found, because NFR-003 rules out a client-side
+           gate. Outside Development IsAvailable is false and none of this exists. *@
+        @if (Model.DemoSignIn.IsAvailable)
+        {
+            <div class="mt-4 pt-3 border-top">
+                <h2 class="h6 text-muted">Demo accounts</h2>
+                <p class="form-text mt-0">
+                    Development only. These are ordinary accounts with no privileges — they
+                    are simply already full of ratings.
+                </p>
+
+                @foreach (var option in Model.DemoSignIn.Options)
+                {
+                    <form method="post" asp-page-handler="Demo" class="mb-2">
+                        <input type="hidden" name="email" value="@option.Email" />
+                        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                        <button type="submit" class="btn btn-outline-secondary w-100 text-start">
+                            <strong>Sign in as @option.DisplayName</strong>
+                            <span class="d-block small text-muted">@option.TasteLabel</span>
+                        </button>
+                    </form>
+                }
+
+                <p class="form-text mb-0">
+                    @* FR-017/SC-017: the same credentials typed into the form above also work. *@
+                    Or type them: @string.Join(", ", Model.DemoSignIn.Options.Select(o => o.Email))
+                    — password <code>@Model.DemoSignIn.Options[0].Password</code>.
+                </p>
+            </div>
+        }
     </div>
 </div>
 
