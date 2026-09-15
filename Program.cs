@@ -167,13 +167,15 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+// 003-004 FR-009 / SC-009. After UseRouting, so the endpoint — and therefore whether the
+// response may contain personal data — is known; before UseAuthorization, because the
+// login redirect it issues for a protected page short-circuits the pipeline and would
+// otherwise escape the header entirely.
+app.UsePersonalDataCacheControl();
+
 app.UseAuthentication();
 app.UseStaleAuthCookieCleanup();
 app.UseAuthorization();
-
-// 003-004 FR-009 / SC-009. After UseRouting, so the endpoint — and therefore whether the
-// response may contain personal data — is known.
-app.UsePersonalDataCacheControl();
 
 // Stylesheets and scripts are not personal data. Without this the fallback policy above
 // would demand a login for the site's own CSS.
