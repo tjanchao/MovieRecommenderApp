@@ -507,8 +507,8 @@ touch them, so the table below is as much a list of what to write as of what to 
 
 | #   | Question                                                                                                        | Owner       | Status | Resolution                                                                                          |
 | --- | ---------------------------------------------------------------------------------------------------------------- | ----------- | ------ | ----------------------------------------------------------------------------------------------------- |
-| 1   | ASP.NET Core Identity, or minimal custom cookie authentication?                                                  | tjanfei chao | Open   | Write an ADR before implementation. Identity is the recommendation: it supplies FR-004, FR-015 and FR-017 out of the box, at the cost of a larger schema and needing its password defaults overridden for FR-002 |
-| 2   | Should NFR-001 – NFR-007 be promoted to arc42 §10 as project-wide quality requirements?                          | tjanfei chao | Open   | Decide when the second spec lands. If each spec re-derives its own security NFRs, they will drift    |
+| 1   | ASP.NET Core Identity, or minimal custom cookie authentication?                                                  | tjanfei chao | Decided | **Identity**, wired up without roles or the scaffolded UI — [ADR-0002](../architecture/adr/0002-identity-mechanism.md). The persistence half of §9.1 went the same way in [ADR-0001](../architecture/adr/0001-persistence-store.md): EF Core over SQLite. Two gaps Identity does not cover had to be closed by hand — NFR-003's timing symmetry and EC-8/EC-9's cookie clearing; both are recorded in ADR-0002 |
+| 2   | Should NFR-001 – NFR-007 be promoted to arc42 §10 as project-wide quality requirements?                          | tjanfei chao | Open   | Still open. Specs 003-004 and 005-008 have since landed and both restate security NFRs of their own, so the drift this question anticipated has begun. Worth resolving before a fourth spec |
 
 ---
 

@@ -1,1 +1,20 @@
 settings.local.json
+
+# Local account store and the data-protection key ring (NFR-004). The key ring decrypts
+# every auth cookie ever issued — it is a secret, and must not be committed.
+App_Data/
+*.db
+*.db-shm
+*.db-wal
+
+# Build output: executables, libraries and debug symbols
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.so
+*.dylib
+*.lib
+*.exp
+*.ilk
