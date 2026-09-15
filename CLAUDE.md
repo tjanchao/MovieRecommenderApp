@@ -32,6 +32,12 @@ The repo encodes a specific three-stage flow from idea to implementable spec. Re
 
 Neither `docs/product/` nor `docs/specs/` exists yet — the first run of each stage creates it.
 
+## GitHub Issues
+
+Always use the **GitHub MCP server** (`mcp__github__*` tools) for anything involving issues — creating, reading, updating, closing, commenting, or searching. Do not use `gh` CLI or raw API calls for issue work.
+
+The target repository is always **`tjanchao/MovieRecommenderApp`** (https://github.com/tjanchao/MovieRecommenderApp), i.e. `owner: tjanchao`, `repo: MovieRecommenderApp`. This is the case even though the local git remote may differ — never infer the repo from local git config.
+
 ## Razor Pages Conventions
 
 Page routing is convention-based off the `Pages/` directory. Each page is a `.cshtml` + `.cshtml.cs` PageModel pair in namespace `movieRecommender.Pages` (set by `Pages/_ViewImports.cshtml`). Shared layout is `Pages/Shared/_Layout.cshtml`, applied via `_ViewStart.cshtml`. Static assets use the .NET 10 `MapStaticAssets()` / `.WithStaticAssets()` pipeline, so client libraries live checked-in under `wwwroot/lib/` (Bootstrap, jQuery, jQuery validation) rather than being restored by a package manager.
