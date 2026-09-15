@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("movieRecommender")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+17a4ab4f4fd88672a235087b6abc81c042aa61b8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2cd5e7b73d831547ffbd0421c1e7845c0d3fb95b")]
 [assembly: System.Reflection.AssemblyProductAttribute("movieRecommender")]
 [assembly: System.Reflection.AssemblyTitleAttribute("movieRecommender")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
