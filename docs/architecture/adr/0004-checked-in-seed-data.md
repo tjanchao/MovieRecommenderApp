@@ -143,7 +143,7 @@ only path there is.
 - [ADR-0002: ASP.NET Core Identity](0002-identity-mechanism.md) — demo accounts are created
   through `UserManager`, so the published password is hashed by the ordinary path
 - [ADR-0003: Ownership enforcement](0003-ownership-enforcement.md) — the seeder writes
-  records for two different owners, which is why the write guard tolerates a null actor and
-  why the reset path uses `IgnoreQueryFilters()`
+  records for two different owners, which is why it is the only code in the project that
+  uses either ownership escape (`IgnoreQueryFilters()`, `WriteOnBehalfOfAnyOwner()`)
 - Spec 003-004 §3.1, §3.2, §5.1, §9.2, §9.3, §10 Q1 and Q3; FR-011 – FR-022; NFR-004,
   NFR-008; EC-8, EC-10, EC-18, EC-20

@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using movieRecommender.Security;
 
 namespace movieRecommender.Data;
@@ -151,6 +152,48 @@ public class ApplicationDbContext : IdentityUserContext<ApplicationUser, Guid>
             .OnDelete(DeleteBehavior.Restrict);
 
     /// <summary>
+    /// Stores every <see cref="DateTimeOffset"/> on an owned record as UTC ticks.
+    /// </summary>
+    /// <remarks>
+    /// SQLite has no date type, and the provider refuses to translate <c>ORDER BY</c> over a
+    /// <see cref="DateTimeOffset"/> at all — the default TEXT mapping throws at query time,
+    /// not at model-build time, so the failure surfaces as a 500 on the first page that
+    /// sorts history by date. Since every timestamp this application writes is UTC (see
+    /// <see cref="OwnedRecord"/> and the seeder), an integer tick count loses nothing and
+    /// sorts and compares in SQL.
+    /// <para>
+    /// Applied by sweep, alongside the ownership rules, for the same reason: stories 009–024
+    /// each add a dated personal record, and each would otherwise rediscover this.
+    /// Deliberately *not* applied to the Identity tables — their columns already hold data
+    /// under 001-002's migration, nothing sorts by them, and converting them in place would
+    /// mean rewriting rows for no gain.
+    /// </para>
+    /// </remarks>
+    private static void StoreTimestampsAsTicks(ModelBuilder builder, Type clrType)
+    {
+        var entityType = builder.Entity(clrType).Metadata;
+
+        foreach (var property in entityType.GetProperties())
+        {
+            if (property.ClrType == typeof(DateTimeOffset))
+            {
+                property.SetValueConverter(UtcTicks);
+            }
+            else if (property.ClrType == typeof(DateTimeOffset?))
+            {
+                property.SetValueConverter(NullableUtcTicks);
+            }
+        }
+    }
+
+    private static readonly ValueConverter<DateTimeOffset, long> UtcTicks =
+        new(value => value.UtcTicks, ticks => new DateTimeOffset(ticks, TimeSpan.Zero));
+
+    private static readonly ValueConverter<DateTimeOffset?, long?> NullableUtcTicks =
+        new(value => value == null ? null : value.Value.UtcTicks,
+            ticks => ticks == null ? null : new DateTimeOffset(ticks.Value, TimeSpan.Zero));
+
+    /// <summary>
     /// Attaches the ownership filter, the owner foreign key and the owner index to every
     /// <see cref="IOwnedRecord"/> in the model, whatever they turn out to be.
     /// </summary>
@@ -182,6 +225,7 @@ public class ApplicationDbContext : IdentityUserContext<ApplicationUser, Guid>
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(nameof(IOwnedRecord.OwnerUserId));
+            StoreTimestampsAsTicks(builder, clrType);
 
             // FR-002. Built by hand because the filter has to be applied per entity type
             // and there is no common base EF can hang one lambda off.
@@ -199,6 +243,42 @@ public class ApplicationDbContext : IdentityUserContext<ApplicationUser, Guid>
 
             entity.HasQueryFilter(Expression.Lambda(Expression.Equal(owner, actor), parameter));
         }
+    }
+
+    /// <summary>
+    /// Suspends the "you may only write your own records" check for the duration of the
+    /// returned scope. The write-side counterpart of
+    /// <see cref="EntityFrameworkQueryableExtensions.IgnoreQueryFilters{T}"/>.
+    /// </summary>
+    /// <remarks>
+    /// The demo seeder is the only caller, and the only code in the project that legitimately
+    /// writes records for accounts other than the acting user. Startup seeding does not need
+    /// it — there is no acting user at startup — but <see cref="DbSet{T}"/> writes during a
+    /// <c>/Demo/Reset</c> post happen inside a request, where the acting user is whoever
+    /// clicked the button and the records being written belong to both demo accounts.
+    /// <para>
+    /// Deliberately verbose and deliberately narrow. It suspends <i>only</i> the actor
+    /// comparison: a record still cannot be saved without an owner, and ownership still
+    /// cannot be changed. Grep for it the way you would grep for
+    /// <c>IgnoreQueryFilters</c> — every use should be arguable
+    /// (<see href="../docs/architecture/adr/0003-ownership-enforcement.md">ADR-0003</see>).
+    /// </para>
+    /// </remarks>
+    public IDisposable WriteOnBehalfOfAnyOwner() => new SystemWriteScope(this);
+
+    private bool _writingOnBehalfOfAnyOwner;
+
+    private sealed class SystemWriteScope : IDisposable
+    {
+        private readonly ApplicationDbContext _context;
+
+        public SystemWriteScope(ApplicationDbContext context)
+        {
+            _context = context;
+            _context._writingOnBehalfOfAnyOwner = true;
+        }
+
+        public void Dispose() => _context._writingOnBehalfOfAnyOwner = false;
     }
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -227,7 +307,7 @@ public class ApplicationDbContext : IdentityUserContext<ApplicationUser, Guid>
     /// </remarks>
     private void EnforceOwnership()
     {
-        var actor = CurrentUserId;
+        var actor = _writingOnBehalfOfAnyOwner ? null : CurrentUserId;
 
         foreach (var entry in ChangeTracker.Entries<IOwnedRecord>())
         {
@@ -256,8 +336,9 @@ public class ApplicationDbContext : IdentityUserContext<ApplicationUser, Guid>
             }
 
             // Outside a request there is no acting user — startup seeding writes records
-            // for accounts nobody is signed in as. Inside one, you write your own data or
-            // you write nothing.
+            // for accounts nobody is signed in as, and so does a demo reset, which says so
+            // via WriteOnBehalfOfAnyOwner. Inside one, you write your own data or you write
+            // nothing.
             if (actor is not null && entry.Entity.OwnerUserId != actor)
             {
                 throw new OwnershipViolationException(

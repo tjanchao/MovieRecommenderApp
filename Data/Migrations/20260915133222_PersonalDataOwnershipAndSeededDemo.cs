@@ -37,7 +37,7 @@ namespace movieRecommender.Data.Migrations
                     PreferredGenres = table.Column<string>(type: "TEXT", nullable: false),
                     PreferredEras = table.Column<string>(type: "TEXT", nullable: false),
                     OwnerUserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    CreatedAt = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,9 +56,9 @@ namespace movieRecommender.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     TmdbId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DismissedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    DismissedAt = table.Column<long>(type: "INTEGER", nullable: false),
                     OwnerUserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    CreatedAt = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,9 +84,9 @@ namespace movieRecommender.Data.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     TmdbId = table.Column<int>(type: "INTEGER", nullable: false),
                     Sentiment = table.Column<int>(type: "INTEGER", nullable: false),
-                    RatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    RatedAt = table.Column<long>(type: "INTEGER", nullable: false),
                     OwnerUserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    CreatedAt = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -111,9 +111,9 @@ namespace movieRecommender.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     TmdbId = table.Column<int>(type: "INTEGER", nullable: false),
-                    WatchedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    WatchedAt = table.Column<long>(type: "INTEGER", nullable: false),
                     OwnerUserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    CreatedAt = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -138,9 +138,9 @@ namespace movieRecommender.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     TmdbId = table.Column<int>(type: "INTEGER", nullable: false),
-                    AddedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    AddedAt = table.Column<long>(type: "INTEGER", nullable: false),
                     OwnerUserId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    CreatedAt = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

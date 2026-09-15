@@ -159,11 +159,11 @@ namespace movieRecommender.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("DismissedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("DismissedAt")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("OwnerUserId")
                         .HasColumnType("TEXT");
@@ -220,14 +220,14 @@ namespace movieRecommender.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("OwnerUserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("RatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("RatedAt")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Sentiment")
                         .HasColumnType("INTEGER");
@@ -253,8 +253,8 @@ namespace movieRecommender.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("OwnerUserId")
                         .HasColumnType("TEXT");
@@ -286,8 +286,8 @@ namespace movieRecommender.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("OwnerUserId")
                         .HasColumnType("TEXT");
@@ -295,8 +295,8 @@ namespace movieRecommender.Data.Migrations
                     b.Property<int>("TmdbId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("WatchedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("WatchedAt")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -315,11 +315,11 @@ namespace movieRecommender.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("AddedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("AddedAt")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("CreatedAt")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("OwnerUserId")
                         .HasColumnType("TEXT");

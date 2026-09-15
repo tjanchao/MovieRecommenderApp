@@ -75,6 +75,17 @@ When there is no acting user — startup seeding — the actor check is skipped 
 "must have an owner" check is not. Seeding can write rows for Ava and Milo; a request
 cannot.
 
+**One escape, on each side, and both have to be typed.**
+
+`IgnoreQueryFilters()` is the read escape. `WriteOnBehalfOfAnyOwner()` is the write one: a
+disposable scope on the context that suspends the actor comparison and nothing else — a
+record still cannot be saved ownerless, and ownership still cannot change. The demo seeder
+is the only caller of either, and it needs the write escape specifically because
+`/Demo/Reset` runs *inside* a request: the acting user is whoever clicked the button, while
+the rows being written belong to both demo accounts. The guard rejected that, correctly,
+the first time reset was exercised. Suspending the check where it is inconvenient is the
+easy mistake here; making the suspension a named, greppable, argued-for scope is the point.
+
 ## Alternatives Considered
 
 **A repository or service layer that takes the owner as a parameter.** Every personal read
@@ -144,5 +155,5 @@ move the rule out of the language the rest of the codebase is written in.
   the claim that `ICurrentUser` reads, and nothing else; ownership is deliberately not a
   role or a claim
 - [ADR-0004: Checked-in seed data](0004-checked-in-seed-data.md) — the seeder is the one
-  component that writes across owners, and the reason the actor check tolerates a null actor
+  component that writes across owners, and therefore the only caller of either escape
 - Spec 003-004 §3.1, §5.2, §9.3; NFR-002, NFR-005; FR-002, FR-003, FR-006, FR-007, FR-010

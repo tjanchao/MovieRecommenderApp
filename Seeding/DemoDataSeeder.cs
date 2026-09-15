@@ -47,6 +47,10 @@ public sealed class DemoDataSeeder
         // account, because it looks like it worked (NFR-004, EC-9).
         await using var transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
 
+        // Seeding writes records for two different accounts, which is exactly what the
+        // write guard exists to stop. Said out loud rather than worked around (ADR-0003).
+        using var systemWrite = _db.WriteOnBehalfOfAnyOwner();
+
         var films = await EnsureFilmsAsync(cancellationToken);
         var created = 0;
 
@@ -97,6 +101,11 @@ public sealed class DemoDataSeeder
     public async Task<int> ResetAsync(CancellationToken cancellationToken = default)
     {
         await using var transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
+
+        // Unlike startup seeding, this runs inside a request: the acting user is whoever
+        // clicked Reset, and the records below belong to both demo accounts. Without this
+        // the guard rejects the second account's rows — correctly (ADR-0003).
+        using var systemWrite = _db.WriteOnBehalfOfAnyOwner();
 
         var films = await EnsureFilmsAsync(cancellationToken);
         var restored = 0;
